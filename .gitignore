@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+*.zip
+.venv/
+venv/
+.env
+secrets/
+secrets.json
+activation.json
+*.key
+*.pem
+logs/
+.vscode/*
+!.vscode/extensions.json
