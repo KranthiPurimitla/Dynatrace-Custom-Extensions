@@ -4,4 +4,4 @@ Collection of Dynatrace Extension 2.0 custom extensions, one folder per extensio
 
 | Extension | Folder | Description |
 |-----------|--------|-------------|
-| VeloCloud SD-WAN | [VeloCloud/](VeloCloud/) | Edge, link, and health metrics from the VeloCloud API |
+| VeloCloud SD-WAN | [VeloCloud/4.0.0/](VeloCloud/4.0.0/) | Edge, link, and health metrics from the VeloCloud API |
