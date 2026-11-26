@@ -1,0 +1,165 @@
+name: custom:devinai
+version: 2.0.2
+minDynatraceVersion: "1.333"
+author:
+  name: "Dynatrace"
+
+
+metrics:
+
+  - key: custom.devin.acu
+    metadata:
+      displayName: Devin AI User ACU
+      description: Daily ACU consumption by Devin user and product
+      unit: Unspecified
+
+  - key: custom.devin.enterprise.acu
+    metadata:
+      displayName: Devin AI Enterprise ACU
+      description: Daily enterprise ACU consumption by product
+      unit: Unspecified
+
+  - key: custom.devin.organization.acu
+    metadata:
+      displayName: Devin AI Organization ACU
+      description: Daily organization ACU consumption by product
+      unit: Unspecified
+
+  - key: custom.devin.acu.total
+    metadata:
+      displayName: Devin AI Total ACU
+      description: Total daily ACU consumption across all products, enterprise-wide
+      unit: Unspecified
+
+  - key: custom.devin.acu.count
+    metadata:
+      displayName: Devin AI User ACU Product Count
+      description: Number of distinct products a user consumed ACU on that day
+      unit: Count
+
+  - key: custom.devin.sessions
+    metadata:
+      displayName: Devin AI Sessions
+      description: Devin enterprise sessions
+      unit: Count
+
+  - key: custom.devin.searches
+    metadata:
+      displayName: Devin AI Searches
+      description: Devin enterprise searches
+      unit: Count
+
+  - key: custom.devin.prs.created
+    metadata:
+      displayName: Devin AI Pull Requests Created
+      description: Pull requests created through Devin
+      unit: Count
+
+  - key: custom.devin.prs.merged
+    metadata:
+      displayName: Devin AI Pull Requests Merged
+      description: Pull requests merged through Devin
+      unit: Count
+
+  - key: custom.devin.acu.count.gauge
+    metadata:
+      displayName: Devin AI User ACU Count
+      description: Daily ACU consumption by Devin user and product count based 
+      unit: Count
+
+topology:
+  types:
+    - enabled: true
+      name: "devinai:user"
+      displayName: "Devin AI User"
+      rules:
+        - idPattern: "devin_user_{user_id}"
+          instanceNamePattern: "{user_name}"
+          sources:
+            - sourceType: Metrics
+              condition: "$eq(custom.devin.acu)"
+          requiredDimensions:
+            - key: user_id
+            - key: user_name
+          attributes:
+            - key: org_id
+              displayName: "Devin Organization ID"
+              pattern: "{org_id}"
+            - key: product
+              displayName: "Devin Product"
+              pattern: "{product}"
+
+    - enabled: true
+      name: "devinai:organization"
+      displayName: "Devin AI Organization"
+      rules:
+        - idPattern: "devin_organization_{org_id}"
+          instanceNamePattern: "{org_id}"
+          sources:
+            - sourceType: Metrics
+              condition: "$eq(custom.devin.acu)"
+            - sourceType: Metrics
+              condition: "$eq(custom.devin.organization.acu)"
+          requiredDimensions:
+            - key: org_id
+
+    - enabled: true
+      name: "devinai:product"
+      displayName: "Devin AI Product"
+      rules:
+        - idPattern: "devin_product_{product}"
+          instanceNamePattern: "{product}"
+          sources:
+            - sourceType: Metrics
+              condition: "$eq(custom.devin.acu)"
+            - sourceType: Metrics
+              condition: "$eq(custom.devin.enterprise.acu)"
+            - sourceType: Metrics
+              condition: "$eq(custom.devin.organization.acu)"
+          requiredDimensions:
+            - key: product
+
+  relationships:
+    - typeOfRelation: PART_OF
+      fromType: "devinai:user"
+      toType: "devinai:organization"
+      sources:
+        - sourceType: Metrics
+          condition: "$eq(custom.devin.acu)"
+
+    - typeOfRelation: CALLS
+      fromType: "devinai:user"
+      toType: "devinai:product"
+      sources:
+        - sourceType: Metrics
+          condition: "$eq(custom.devin.acu)"
+
+    - typeOfRelation: CALLS
+      fromType: "devinai:organization"
+      toType: "devinai:product"
+      sources:
+        - sourceType: Metrics
+          condition: "$eq(custom.devin.organization.acu)"
+
+
+python:
+  runtime:
+    module: devinai
+    version:
+      min: "3.14"
+
+  activation:
+    remote:
+      path: activationSchema.json
+    local:
+      path: activationSchema.json
+
+documents:
+  dashboards:
+    - displayName: DevinAI ACU Extension Overview
+      path: documents/devinai_acu_extension_overview.dashboard.json
+    - displayName: DevinAI 0.0.6 Extension Overview Overview
+      path: documents/devinai_0_0_6_extension_overview_overview.dashboard.json
+
+dashboards:
+  - path: dashboards/overview_dashboard.json
