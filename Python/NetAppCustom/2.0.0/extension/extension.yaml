@@ -1,0 +1,191 @@
+name: custom:netappcustom
+version: 2.0.0
+minDynatraceVersion: "1.333"
+
+author:
+  name: "Kranthi"
+
+metrics:
+  # -------------------------------------------------
+  # Per-SVM CIFS session count
+  # -------------------------------------------------
+  - key: netapp.cifs.sessions
+    metadata:
+      displayName: "CIFS Session Count"
+      description: "Number of active CIFS sessions per SVM on the NetApp cluster"
+      unit: Count
+      dimensions:
+        - key: cluster
+          displayName: "Cluster Name"
+        - key: svm
+          displayName: "SVM Name"
+      tags:
+        - custom_extension_netapp
+
+  # -------------------------------------------------
+  # Cluster-level CIFS session total
+  # -------------------------------------------------
+  - key: netapp.cifs.total_sessions
+    metadata:
+      displayName: "CIFS Total Session Count"
+      description: "Total number of active CIFS sessions on the NetApp cluster"
+      unit: Count
+      dimensions:
+        - key: cluster
+          displayName: "Cluster Name"
+      tags:
+        - custom_extension_netapp
+
+  # -------------------------------------------------
+  # Volume space used (bytes)
+  # -------------------------------------------------
+  - key: netapp.volume.space.used
+    metadata:
+      displayName: "Volume Space Used"
+      description: "Used space of the NetApp volume in bytes"
+      unit: Byte
+      dimensions:
+        - key: cluster
+          displayName: "Cluster Name"
+        - key: svm
+          displayName: "SVM Name"
+        - key: volume
+          displayName: "Volume Name"
+      tags:
+        - custom_extension_netapp
+
+  # -------------------------------------------------
+  # Volume space available (bytes)
+  # -------------------------------------------------
+  - key: netapp.volume.space.available
+    metadata:
+      displayName: "Volume Space Available"
+      description: "Available space of the NetApp volume in bytes"
+      unit: Byte
+      dimensions:
+        - key: cluster
+          displayName: "Cluster Name"
+        - key: svm
+          displayName: "SVM Name"
+        - key: volume
+          displayName: "Volume Name"
+      tags:
+        - custom_extension_netapp
+
+  # -------------------------------------------------
+  # Volume space used percentage (calculated in code)
+  # -------------------------------------------------
+  
+  - key: netapp.volume.space_used_percent
+    metadata:
+      displayName: "Volume Space Used (%)"
+      description: "Percentage of used space on the NetApp volume"
+      unit: Percent
+      dimensions:
+        - key: cluster
+          displayName: "Cluster Name"
+        - key: svm
+          displayName: "SVM Name"
+        - key: volume
+          displayName: "Volume Name"
+      tags:
+        - custom_extension_netapp
+  # -------------------------------------------------
+  # Volume state (1=online, 0=offline)
+  # -------------------------------------------------
+  - key: netapp.volume.state
+    metadata:
+      displayName: "Volume State"
+      description: "1=online, 0=offline"
+      unit: Count
+      dimensions:
+        - key: cluster
+          displayName: "Cluster Name"
+        - key: node
+          displayName: "Node Name"
+        - key: volume
+          displayName: "Volume Name"
+        - key: state
+          displayName: "Volume State"
+      tags:
+        - custom_extension_netapp
+
+
+topology:
+  types:
+    # -------------------------------------------------
+    # NetApp SVM entity
+    # -------------------------------------------------
+    - enabled: true
+      name: "custom:netappsvm"
+      displayName: "NetApp SVM"
+      rules:
+        - idPattern: "NetApp_SVM_{cluster}_{svm}"
+          instanceNamePattern: "{svm}"
+          iconPattern: "storage"
+          attributes:
+            - key: cluster
+              pattern: "{cluster}"
+            - key: svm
+              pattern: "{svm}"
+          sources:
+            - sourceType: Metrics
+              condition: $eq(netapp.cifs.sessions)
+          role: default
+
+    # -------------------------------------------------
+    # NetApp Volume entity
+    # -------------------------------------------------
+    - enabled: true
+      name: "custom:netappvolume"
+      displayName: "NetApp Volume"
+      rules:
+        - idPattern: "NetApp_Volume_{cluster}_{svm}_{volume}"
+          instanceNamePattern: "{volume}"
+          iconPattern: storage
+          attributes:
+            - key: cluster
+              pattern: "{cluster}"
+            - key: svm
+              pattern: "{svm}"
+            - key: volume
+              pattern: "{volume}"
+          sources:
+            - sourceType: Metrics
+              condition: $eq(netapp.volume.space.used)
+          role: default
+
+
+
+python:
+  runtime:
+    module: netappcustom
+    version:
+      min: "3.14"
+
+  activation:
+    remote:
+      path: activationSchema.json
+    local:
+      path: activationSchema.json
+
+  featureSets:
+    - featureSet: NetAppCifsSessions
+      metrics:
+        - key: netapp.cifs.sessions
+        - key: netapp.cifs.total_sessions
+
+    - featureSet: NetAppVolumeSpace
+      metrics:
+        - key: netapp.volume.space.used
+        - key: netapp.volume.space.available
+        - key: netapp.volume.space_used_percent
+        - key: netapp.volume.state
+
+   
+
+
+
+  
+
+
