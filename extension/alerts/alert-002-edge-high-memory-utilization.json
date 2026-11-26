@@ -1,0 +1,23 @@
+{
+  "id": "4580fbcc-55ea-4e37-94a9-211ef122fe59",
+  "metricId": "custom.velocloud.edge.memory_utilization",
+  "name": "Edge High Memory Utilization",
+  "description": "The {metricname} value was {alert_condition} normal behavior. Dimensions: {dims}",
+  "enabled": true,
+  "monitoringStrategy": {
+    "type": "STATIC_THRESHOLD",
+    "violatingSamples": 3,
+    "samples": 5,
+    "dealertingSamples": 5,
+    "alertCondition": "ABOVE",
+    "alertingOnMissingData": false,
+    "threshold": 90
+  },
+  "primaryDimensionKey": "dt.entity.custom:velocloudedgesystem",
+  "alertCondition": "ABOVE",
+  "samples": 5,
+  "violatingSamples": 3,
+  "dealertingSamples": 5,
+  "threshold": 90,
+  "eventType": "CUSTOM_ALERT"
+}

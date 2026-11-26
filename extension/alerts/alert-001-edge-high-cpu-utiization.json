@@ -1,0 +1,23 @@
+{
+  "id": "6a3dc4bb-b29b-438f-a743-e784826a2366",
+  "metricId": "custom.velocloud.edge.cpu_utilization",
+  "name": "Edge High CPU Utiization",
+  "description": "The {metricname} value was {alert_condition} normal behavior. Dimensions: {dims}",
+  "enabled": true,
+  "monitoringStrategy": {
+    "type": "STATIC_THRESHOLD",
+    "violatingSamples": 3,
+    "samples": 5,
+    "dealertingSamples": 5,
+    "alertCondition": "ABOVE",
+    "alertingOnMissingData": false,
+    "threshold": 90
+  },
+  "primaryDimensionKey": "dt.entity.custom:velocloudedgesystem",
+  "alertCondition": "ABOVE",
+  "samples": 5,
+  "violatingSamples": 3,
+  "dealertingSamples": 5,
+  "threshold": 90,
+  "eventType": "CUSTOM_ALERT"
+}
