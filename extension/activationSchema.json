@@ -1,0 +1,125 @@
+{
+  "types": {
+    "dynatrace.datasource.python:velocloudextensionrevised-endpoint": {
+      "type": "object",
+      "displayName": "Velocloud Endpoint",
+      "summaryPattern": "Velocloud {api_host}",
+      "properties": {
+        "api_host": {
+          "displayName": "API HOST",
+          "type": "text",
+          "nullable": false,
+          "default": "",
+          "constraints": [
+            {
+              "type": "LENGTH",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          ],
+          "maxItems": 1
+        },
+
+        "api_token": {
+          "displayName": "API Token",
+          "type": "secret",
+          "nullable": false,
+          "default": "",
+          "constraints": [
+            {
+              "type": "LENGTH",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          ],
+          "maxItems": 1
+        }
+      }
+    },
+    "pythonRemote": {
+      "type": "object",
+      "properties": {
+        "endpoints": {
+          "displayName": "Velocloud endpoint",
+          "type": "list",
+          "items": {
+            "type": {
+              "$ref": "#/types/dynatrace.datasource.python:velocloudextensionrevised-endpoint"
+            }
+          },
+          "nullable": false,
+          "minItems": 1,
+          "maxItems": 100,
+          "metaData": {
+            "addItemButton": "Add endpoint"
+          }
+        }
+      }
+    },
+    "pythonLocal": {
+      "type": "object",
+      "properties": {
+        "endpoints": {
+          "displayName": "Velocloud endpoint",
+          "type": "list",
+          "items": {
+            "type": {
+              "$ref": "#/types/dynatrace.datasource.python:velocloudextensionrevised-endpoint"
+            }
+          },
+          "nullable": false,
+          "minItems": 1,
+          "maxItems": 100,
+          "metaData": {
+            "addItemButton": "Add endpoint"
+          }
+        },
+        "rate_budget_per_minute": {
+          "displayName": "API requests per minute (budget)",
+          "type": "text",
+          "nullable": false,
+          "default": "30",
+          "constraints": [
+            { "type": "LENGTH", "minLength": 1, "maxLength": 3 }
+          ],
+          "maxItems": 1
+        },
+        "health_every_n_cycles": {
+          "displayName": "Health stats every N cycles",
+          "type": "text",
+          "nullable": false,
+          "default": "5",
+          "constraints": [
+            { "type": "LENGTH", "minLength": 1, "maxLength": 2 }
+          ],
+          "maxItems": 1
+        }
+      }
+    }
+  },
+  "dynatrace": "1",
+  "description": "velocloud configuration",
+  "schemaId": "python-extension.activation",
+  "displayName": "velocloud configuration",
+  "ownerProductManagement": "dynatrace",
+  "ownerDevelopment": "dynatrace",
+  "maturity": "GENERAL_AVAILABILITY",
+  "allowedScopes": [
+    "tenant"
+  ],
+  "multiObject": false,
+  "properties": {
+    "pythonLocal": {
+      "displayName": "Python Local Extension",
+      "type": {
+        "$ref": "#/types/pythonLocal"
+      }
+    },
+    "pythonRemote": {
+      "displayName": "Python Remote Extension",
+      "type": {
+        "$ref": "#/types/pythonRemote"
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+include README.md
+include LICENSE
+recursive-include extension *.yaml *.json
+recursive-include velocloudextensionrevised *.py
+include setup.py
+include setup.cfg
