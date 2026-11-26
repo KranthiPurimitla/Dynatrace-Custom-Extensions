@@ -12,3 +12,4 @@ Extensions built on the Python data source (`dynatrace-extension` SDK).
 | Genesys Cloud | [Python/GenesysCloud/0.0.3/](Python/GenesysCloud/0.0.3/) | Conversation and platform health metrics from the Genesys Cloud API |
 | Pure Storage (Pure1) | [Python/PureExtension/1.0.0/](Python/PureExtension/1.0.0/) | Per-volume capacity metrics from the Pure1 REST API, used for volume utilization alerts |
 | NetApp Custom | [Python/NetAppCustom/2.0.0/](Python/NetAppCustom/2.0.0/) | NetApp custom metrics using the Python data source |
+| Devin AI ACU | [Python/DevinAI/2.0.2/](Python/DevinAI/2.0.2/) | Devin AI ACU consumption, usage, and topology metrics from the Devin enterprise API |
