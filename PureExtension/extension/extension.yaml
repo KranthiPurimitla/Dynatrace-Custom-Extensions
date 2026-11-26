@@ -1,0 +1,84 @@
+name: custom:custom-pure
+version: 1.0.0
+minDynatraceVersion: "1.333"
+author:
+  name: "Dynatrace"
+
+
+metrics:
+  - key: custompure1.volume.provisioned
+    metadata:
+      displayName: "Pure1 Volume Provisioned Capacity"
+      unit: Byte
+      dimensions:
+        - key: volume_id
+          displayName: "Volume ID"
+        - key: volume_name
+          displayName: "Volume Name"
+        - key: cluster_name
+          displayName: "Cluster Name"
+
+  - key: custompure1.volume.physicalcapacity
+    metadata:
+      displayName: "Pure1 Volume Physical Capacity"
+      unit: Byte
+      dimensions:
+        - key: volume_id
+          displayName: "Volume ID"
+        - key: volume_name
+          displayName: "Volume Name"
+        - key: cluster_name
+          displayName: "Cluster Name"
+
+  - key: custompure1.volume.used_percentage
+    metadata:
+      displayName: "Pure1 Volume Used Percentage"
+      description: "Percentage of provisioned capacity currently used (physical capacity / provisioned capacity * 100)."
+      unit: Percent
+      dimensions:
+        - key: volume_id
+          displayName: "Volume ID"
+        - key: volume_name
+          displayName: "Volume Name"
+        - key: cluster_name
+          displayName: "Cluster Name"
+
+topology:
+  types:
+    - enabled: true
+      name: "custom:pure1_volume"
+      displayName: "Pure1 Volume"
+
+      rules:
+        - idPattern: "PureVolume_{volume_name}"
+          instanceNamePattern: "{volume_name}"
+          iconPattern: "storage"
+
+          attributes:
+            - key: volume_name
+              pattern: "{volume_name}"
+
+            - key: cluster_name
+              pattern: "{cluster_name}"
+
+          sources:
+            - sourceType: Metrics
+              condition: $eq(custompure1.volume.provisioned)
+            - sourceType: Metrics
+              condition: $eq(custompure1.volume.physicalcapacity)
+            - sourceType: Metrics
+              condition: $eq(custompure1.volume.used_percentage)
+
+          role: default
+
+python:
+  runtime:
+    module: custom_pure
+    version:
+      min: "3.14"
+
+  activation:
+    remote:
+      path: activationSchema.json
+    local:
+      path: activationSchema.json
