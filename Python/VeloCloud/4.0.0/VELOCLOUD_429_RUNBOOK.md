@@ -1,6 +1,6 @@
 # VeloCloud 429 "Too Many Requests" runbook
 
-Last updated: 2026-10-19. Written for the VeloCloud Orchestrator (VCO) admin and for Claude Code working in `c:\Users\280380\velorevise`.
+Last updated: 2026-10-19. Written for the VeloCloud Orchestrator (VCO) admin and for maintainers of this extension.
 
 ## 1. The challenge
 
@@ -109,7 +109,7 @@ Edit `velocloudextensionrevised\api_client.py`:
 - `MAX_IN_FLIGHT`: the concurrency limit from VCO.
 - `RATE_LIMIT_PENALTY`: the penalty time from VCO (default 5 s).
 
-Rule from CLAUDE.md: do not lower `MAX_REQUESTS_PER_SECOND` below what the VCO Operator confirms without asking first.
+Project rule: do not lower `MAX_REQUESTS_PER_SECOND` below what the VCO Operator confirms without asking first.
 
 Check the first-run pacer: each new run starts at `MAX_REQUESTS_PER_SECOND`. If the VCO limit is a burst limit (about 10 calls), start the pacer at the floor instead. This is an open item; see Section 5.
 
@@ -149,9 +149,9 @@ Use the scratchpad folder for report and log files, not the project folder.
 - **Header logs:** check the first 429 entry in the next run's log for the actual limit headers (X-RateLimit-*, Retry-After). Record them here.
 - **Two-client check:** if 429s continue with nothing else running, check the VCO audit log for client IDs or source IPs making calls with these credentials.
 
-## 6. Rules for Claude Code on this project
+## 6. Rules for maintainers of this project
 
-See `CLAUDE.md` in the project root. Key points:
+Key points:
 - Build on the existing pacing and retry code. Do not add a second retry layer.
 - Do not lower `MAX_REQUESTS_PER_SECOND` below the VCO Operator's confirmed value without asking.
 - Do not make live VCO calls without asking, except the approved test in Step 4 or a run the user has asked for.

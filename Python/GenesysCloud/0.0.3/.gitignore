@@ -186,4 +186,3 @@ secrets/
 *.pem
 *.zip
 activation.json
-.claude/settings.local.json
