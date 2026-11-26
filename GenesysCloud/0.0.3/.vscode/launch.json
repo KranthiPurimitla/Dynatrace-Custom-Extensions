@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "genesyscloud: run (fastcheck)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "genesyscloud",
+            "args": ["--activationconfig", "activation.json", "--secrets", "secrets.json", "--fastcheck"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "genesyscloud: run",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "genesyscloud",
+            "args": ["--activationconfig", "activation.json", "--secrets", "secrets.json"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        }
+    ]
+}

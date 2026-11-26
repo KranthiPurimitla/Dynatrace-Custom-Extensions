@@ -1,0 +1,117 @@
+{
+  "types": {
+    "dynatrace.datasource.python:genesys-connection": {
+      "type": "object",
+      "displayName": "Genesys Cloud connection",
+      "summaryPattern": "Genesys Cloud {region}",
+      "properties": {
+        "region": {
+          "displayName": "Region",
+          "description": "Genesys Cloud region code, e.g. us-east-1, eu-west-1, ap-northeast-1. Must be one of the regions supported by genesys_constants.REGIONS.",
+          "type": "text",
+          "nullable": false,
+          "default": "",
+          "constraints": [
+            {
+              "type": "LENGTH",
+              "minLength": 1,
+              "maxLength": 50
+            }
+          ],
+          "maxItems": 1
+        },
+        "clientId": {
+          "displayName": "OAuth Client ID",
+          "description": "Client ID of the Genesys Cloud OAuth client-credentials grant.",
+          "type": "text",
+          "nullable": false,
+          "default": "",
+          "constraints": [
+            {
+              "type": "LENGTH",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          ],
+          "maxItems": 1
+        },
+        "clientSecret": {
+          "displayName": "OAuth Client Secret",
+          "description": "Client secret of the Genesys Cloud OAuth client-credentials grant.",
+          "type": "secret",
+          "nullable": false,
+          "default": "",
+          "constraints": [
+            {
+              "type": "LENGTH",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          ],
+          "maxItems": 1
+        },
+        "orgName": {
+          "displayName": "Organization name",
+          "description": "Friendly name used to tag metrics with the org_name dimension. Defaults to the region when left blank.",
+          "type": "text",
+          "nullable": true,
+          "constraints": [
+            {
+              "type": "LENGTH",
+              "minLength": 0,
+              "maxLength": 200
+            }
+          ],
+          "maxItems": 1
+        }
+      }
+    },
+    "pythonRemote": {
+      "type": "object",
+      "properties": {
+        "genesys": {
+          "displayName": "Genesys Cloud connection",
+          "type": {
+            "$ref": "#/types/dynatrace.datasource.python:genesys-connection"
+          }
+        }
+      }
+    },
+    "pythonLocal": {
+      "type": "object",
+      "properties": {
+        "genesys": {
+          "displayName": "Genesys Cloud connection",
+          "type": {
+            "$ref": "#/types/dynatrace.datasource.python:genesys-connection"
+          }
+        }
+      }
+    }
+  },
+  "dynatrace": "1",
+  "description": "genesyscloud configuration",
+  "schemaId": "python-extension.activation",
+  "displayName": "genesyscloud configuration",
+  "ownerProductManagement": "dynatrace",
+  "ownerDevelopment": "dynatrace",
+  "maturity": "GENERAL_AVAILABILITY",
+  "allowedScopes": [
+    "tenant"
+  ],
+  "multiObject": false,
+  "properties": {
+    "pythonLocal": {
+      "displayName": "Python Local Extension",
+      "type": {
+        "$ref": "#/types/pythonLocal"
+      }
+    },
+    "pythonRemote": {
+      "displayName": "Python Remote Extension",
+      "type": {
+        "$ref": "#/types/pythonRemote"
+      }
+    }
+  }
+}

@@ -1,0 +1,278 @@
+name: custom:genesyscloud
+version: 0.0.3
+minDynatraceVersion: "1.285"
+author:
+  name: "Dynatrace"
+
+# ---------------------------------------------------------------------------
+# Metric metadata. Keys MUST match genesyscloud/genesys_constants.py.
+# ---------------------------------------------------------------------------
+metrics:
+  # Phase 0 - Platform Health
+  - key: genesys.api.response.time
+    metadata:
+      displayName: "Genesys API response time"
+      description: "Average Genesys API latency observed this collection cycle"
+      unit: MilliSecond
+      dimensions:
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  - key: genesys.api.calls
+    metadata:
+      displayName: "Genesys API calls"
+      description: "Number of Genesys API calls made this collection cycle"
+      unit: Count
+      dimensions:
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  - key: genesys.api.errors
+    metadata:
+      displayName: "Genesys API errors"
+      description: "Number of failed Genesys API calls this collection cycle"
+      unit: Count
+      dimensions:
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  - key: genesys.api.auth.failures
+    metadata:
+      displayName: "Genesys API auth failures"
+      description: "Number of OAuth token failures this collection cycle"
+      unit: Count
+      dimensions:
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  - key: genesys.api.rate.limit
+    metadata:
+      displayName: "Genesys API rate-limit hits"
+      description: "Number of HTTP 429 responses this collection cycle"
+      unit: Count
+      dimensions:
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  # Phase 1 - Conversations
+  - key: genesys.conversation.count
+    metadata:
+      displayName: "Conversation Count"
+      description: "Total conversations offered in the interval"
+      unit: Count
+      dimensions:
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  - key: genesys.conversation.inbound
+    metadata:
+      displayName: "Conversation Inbound Count"
+      description: "Conversations offered with direction=inbound"
+      unit: Count
+      dimensions:
+        - key: conversation_name
+          displayName: "Conversation Type"
+        - key: direction
+          displayName: "Direction"
+        - key: media_type
+          displayName: "Media Type"
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  - key: genesys.conversation.outbound
+    metadata:
+      displayName: "Conversation Outbound Count"
+      description: "Conversations offered with direction=outbound"
+      unit: Count
+      dimensions:
+        - key: conversation_name
+          displayName: "Conversation Type"
+        - key: direction
+          displayName: "Direction"
+        - key: media_type
+          displayName: "Media Type"
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  - key: genesys.conversation.handle.time
+    metadata:
+      displayName: "Conversation Average Handle Time"
+      description: "Average conversation handle time (tHandle) for the interval"
+      unit: Second
+      dimensions:
+        - key: conversation_name
+          displayName: "Conversation Type"
+        - key: direction
+          displayName: "Direction"
+        - key: media_type
+          displayName: "Media Type"
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  - key: genesys.conversation.talk.time
+    metadata:
+      displayName: "Conversation Average Talk Time"
+      description: "Average conversation talk time (tTalk) for the interval"
+      unit: Second
+      dimensions:
+        - key: conversation_name
+          displayName: "Conversation Type"
+        - key: direction
+          displayName: "Direction"
+        - key: media_type
+          displayName: "Media Type"
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  - key: genesys.conversation.wait.time
+    metadata:
+      displayName: "Conversation Average Wait Time"
+      description: "Average ACD wait time (tWait) for the interval"
+      unit: Second
+      dimensions:
+        - key: conversation_name
+          displayName: "Conversation Type"
+        - key: direction
+          displayName: "Direction"
+        - key: media_type
+          displayName: "Media Type"
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  - key: genesys.conversation.hold.time
+    metadata:
+      displayName: "Conversation Average Hold Time"
+      description: "Average conversation hold time (tHeld) for the interval"
+      unit: Second
+      dimensions:
+        - key: conversation_name
+          displayName: "Conversation Type"
+        - key: direction
+          displayName: "Direction"
+        - key: media_type
+          displayName: "Media Type"
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+  - key: genesys.conversation.acw.time
+    metadata:
+      displayName: "Conversation Average After-Call Work"
+      description: "Average after-call work time (tAcw) for the interval"
+      unit: Second
+      dimensions:
+        - key: conversation_name
+          displayName: "Conversation Type"
+        - key: direction
+          displayName: "Direction"
+        - key: media_type
+          displayName: "Media Type"
+        - key: org_name
+          displayName: "Organization"
+      tags:
+        - custom_extension_genesyscloud
+
+# ---------------------------------------------------------------------------
+# Topology:
+#   genesys:organization  — keyed by org_name, sourced from genesys.api.* (health metrics)
+#   genesys:conversation  — keyed by org_name + conversation_name ({direction}_{media_type}),
+#                           sourced from genesys.conversation.* metrics
+# ---------------------------------------------------------------------------
+topology:
+  types:
+    - enabled: true
+      name: "genesys:organization"
+      displayName: "Genesys Organization"
+      rules:
+        - idPattern: "genesys_org_{org_name}"
+          instanceNamePattern: "{org_name}"
+          iconPattern: "cloud"
+          attributes:
+            - key: org_name
+              displayName: "Organization"
+              pattern: "{org_name}"
+          sources:
+            - sourceType: Metrics
+              condition: $prefix(genesys.api.)
+          role: default
+
+    - enabled: true
+      name: "genesys:conversation"
+      displayName: "Genesys Conversation"
+      rules:
+        - idPattern: "genesys_conv_{org_name}_{conversation_name}"
+          instanceNamePattern: "{conversation_name}"
+          iconPattern: "chat"
+          attributes:
+            - key: conversation_name
+              displayName: "Conversation Type"
+              pattern: "{conversation_name}"
+            - key: org_name
+              displayName: "Organization"
+              pattern: "{org_name}"
+          sources:
+            - sourceType: Metrics
+              condition: $prefix(genesys.conversation.)
+          role: default
+
+# ---------------------------------------------------------------------------
+# Python data source. The module name must match the package directory.
+# The framework runs `python -m genesyscloud`, executing genesyscloud/__main__.py.
+# ---------------------------------------------------------------------------
+python:
+  runtime:
+    module: genesyscloud
+    version:
+      min: "3.10"
+
+  activation:
+    remote:
+      path: activationSchema.json
+    local:
+      path: activationSchema.json
+
+  featureSets:  # You MUST define the metrics under featureSets
+    - featureSet: platform_health
+      metrics:
+        - key: genesys.api.response.time
+        - key: genesys.api.calls
+        - key: genesys.api.errors
+        - key: genesys.api.auth.failures
+        - key: genesys.api.rate.limit
+
+    - featureSet: conversations
+      metrics:
+        - key: genesys.conversation.count
+        - key: genesys.conversation.inbound
+        - key: genesys.conversation.outbound
+        - key: genesys.conversation.handle.time
+        - key: genesys.conversation.talk.time
+        - key: genesys.conversation.wait.time
+        - key: genesys.conversation.hold.time
+        - key: genesys.conversation.acw.time
+
+dashboards:
+  - path: dashboards/overview_dashboard.json
